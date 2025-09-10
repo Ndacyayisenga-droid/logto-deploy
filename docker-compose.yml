@@ -3,7 +3,6 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15
-    container_name: logto_postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: logto
@@ -14,7 +13,6 @@ services:
 
   logto:
     image: ghcr.io/logto-io/logto:latest
-    container_name: logto
     restart: unless-stopped
     depends_on:
       - postgres
@@ -26,8 +24,7 @@ services:
       ENDPOINT: https://auth.yourdomain.com
     ports:
       - "3001:3001"
-    command: >
-      sh -c "logto db migrate --no-interaction && logto start"
+    command: sh -c "logto db migrate --no-interaction && logto start"
     volumes:
       - logto_data:/root/.logto
 
