@@ -1,22 +1,6 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  logto:
-    image: ghcr.io/logto-io/logto:latest
-    container_name: logto
-    restart: unless-stopped
-    ports:
-      - "3001:3001"
-    environment:
-      NODE_ENV: production
-      TRUST_PROXY_HEADER: 1
-      LOG_LEVEL: info
-      DB_URL: postgres://logto:logto@postgres:5432/logto
-    depends_on:
-      - postgres
-    command: >
-      sh -c "npm run db:migrate:deploy && npm start"
-
   postgres:
     image: postgres:15
     container_name: logto_postgres
@@ -28,5 +12,37 @@ services:
     volumes:
       - logto_db:/var/lib/postgresql/data
 
+  logto:
+    image: ghcr.io/logto-io/logto:latest
+    container_name: logto
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: production
+      TRUST_PROXY_HEADER: 1
+      LOG_LEVEL: info
+      DB_URL: postgres://logto:logto@postgres:5432/logto
+      ENDPOINT: http://localhost:3001
+    ports:
+      - "3001:3001"
+    command: >
+      sh -c "logto db migrate --no-interaction && logto start"
+    volumes:
+      - logto_data:/root/.logto
+
+  logto-admin:
+    image: ghcr.io/logto-io/admin-console:latest
+    container_name: logto_admin
+    restart: unless-stopped
+    depends_on:
+      - logto
+    environment:
+      NODE_ENV: production
+      LOGTO_ENDPOINT: http://logto:3001
+    ports:
+      - "3002:3002"
+
 volumes:
   logto_db:
+  logto_data:
