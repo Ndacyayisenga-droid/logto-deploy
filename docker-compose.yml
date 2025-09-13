@@ -11,7 +11,7 @@ services:
     volumes:
       - logto_db:/var/lib/postgresql/data
 
-  logto:
+    logto:
     image: ghcr.io/logto-io/logto:latest
     restart: unless-stopped
     depends_on:
@@ -21,16 +21,12 @@ services:
       TRUST_PROXY_HEADER: 1
       LOG_LEVEL: info
       DB_URL: postgres://logto:logto@postgres:5432/logto
-      ENDPOINT: https://auth.yourdomain.com
+      ENDPOINT: https://logto.open-elements.cloud
     ports:
       - "3001:3001"
     volumes:
       - logto_data:/root/.logto
-    command: >
-      sh -c "
-        npm run alteration deploy &&
-        npm run start
-      "
+    command: ["sh", "-c", "npm run alteration deploy && npm run start"]
 
 volumes:
   logto_db:
