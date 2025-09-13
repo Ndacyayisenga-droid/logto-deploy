@@ -30,7 +30,7 @@ services:
       - "3002:3002"
     volumes:
       - logto_data:/root/.logto
-      - ./logto-init.sh:/docker-entrypoint-init.d/logto-init.sh:ro
+      - ./logto-entrypoint.sh:/docker-entrypoint-init.d/logto-entrypoint.sh:ro
     labels:
       - coolify.main=true
 
