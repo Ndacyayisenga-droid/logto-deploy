@@ -1,6 +1,25 @@
-version: "3.9"
-
+version: "3.8"
 services:
+  logto:
+    image: node:22
+    container_name: logto
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      - ./init-tenants.sh:/usr/src/app/init-tenants.sh
+    ports:
+      - "3001:3001" # core
+      - "3002:3002" # admin
+    environment:
+      NODE_ENV: production
+      DB_URL: postgres://logto:logto@postgres:5432/logto
+      ADMIN_ENDPOINT: https://logto.open-elements.cloud/console
+      ENDPOINT: https://logto.open-elements.cloud
+      TRUST_PROXY_HEADER: "1"
+    depends_on:
+      - postgres
+    command: ["sh", "./init-tenants.sh"]
+
   postgres:
     image: postgres:15
     restart: unless-stopped
@@ -9,31 +28,7 @@ services:
       POSTGRES_PASSWORD: logto
       POSTGRES_DB: logto
     volumes:
-      - logto_db:/var/lib/postgresql/data
-    labels:
-      - coolify.hidden=true
-
-  logto:
-    image: ghcr.io/logto-io/logto:latest
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    environment:
-      NODE_ENV: production
-      TRUST_PROXY_HEADER: 1
-      LOG_LEVEL: info
-      DB_URL: postgres://logto:logto@postgres:5432/logto
-      ENDPOINT: https://logto.open-elements.cloud
-      ADMIN_ENDPOINT: https://logto.open-elements.cloud/console
-    ports:
-      - "3001:3001"
-      - "3002:3002"
-    volumes:
-      - logto_data:/root/.logto
-      - ./logto-entrypoint.sh:/docker-entrypoint-init.d/logto-entrypoint.sh:ro
-    labels:
-      - coolify.main=true
+      - pgdata:/var/lib/postgresql/data
 
 volumes:
-  logto_db:
-  logto_data:
+  pgdata:
