@@ -31,7 +31,7 @@ services:
     volumes:
       - logto_data:/root/.logto
     entrypoint: ["/bin/sh", "-c"]
-    command: ["npm run cli db seed -- --swe && npm run alteration deploy && npm start"]
+    command: ["npm run alteration deploy && npm start"]
     labels:
       - coolify.main=true     # mark this as the main service in Coolify
 
