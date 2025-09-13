@@ -23,7 +23,7 @@ services:
       TRUST_PROXY_HEADER: 1
       LOG_LEVEL: info
       DB_URL: postgres://logto:logto@postgres:5432/logto
-      ENDPOINT: https://auth.yourdomain.com
+      ENDPOINT: https://logto.open-elements.cloud
     ports:
       - "3001:3001"
     volumes:
