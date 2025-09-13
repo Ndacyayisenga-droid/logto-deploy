@@ -10,8 +10,10 @@ services:
       POSTGRES_DB: logto
     volumes:
       - logto_db:/var/lib/postgresql/data
+    labels:
+      - coolify.hidden=true   # hide from Coolify UI, it's just a dependency
 
-    logto:
+  logto:
     image: ghcr.io/logto-io/logto:latest
     restart: unless-stopped
     depends_on:
@@ -21,12 +23,14 @@ services:
       TRUST_PROXY_HEADER: 1
       LOG_LEVEL: info
       DB_URL: postgres://logto:logto@postgres:5432/logto
-      ENDPOINT: https://logto.open-elements.cloud
+      ENDPOINT: https://auth.yourdomain.com
     ports:
       - "3001:3001"
     volumes:
       - logto_data:/root/.logto
     command: ["sh", "-c", "npm run alteration deploy && npm run start"]
+    labels:
+      - coolify.main=true     # mark this as the main service in Coolify
 
 volumes:
   logto_db:
