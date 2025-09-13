@@ -24,8 +24,10 @@ services:
       LOG_LEVEL: info
       DB_URL: postgres://logto:logto@postgres:5432/logto
       ENDPOINT: https://logto.open-elements.cloud
+      ADMIN_ENDPOINT: https://logto.open-elements.cloud/console
     ports:
       - "3001:3001"
+      - "3002:3002"
     volumes:
       - logto_data:/root/.logto
     entrypoint: ["/bin/sh", "-c"]
