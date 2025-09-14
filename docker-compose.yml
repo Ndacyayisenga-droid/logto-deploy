@@ -23,6 +23,9 @@ services:
       DB_URL: postgres://logto:logto@postgres:5432/logto
       ENDPOINT: https://logto.open-elements.cloud
       ADMIN_ENDPOINT: https://logto.open-elements.cloud/console
+      # Additional proxy configuration to fix cookie/session issues
+      PROXY_HEADER_X_FORWARDED_PROTO: https
+      PROXY_HEADER_X_FORWARDED_FOR: true
     ports:
       - "3001:3001"
       - "3002:3002"
